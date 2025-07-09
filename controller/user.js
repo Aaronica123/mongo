@@ -12,4 +12,39 @@ const userRegistration = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-module.exports = { userRegistration };
+const getAllUsers = async (req, res) => {
+    try {
+        // Fetch all documents from the 'users' collection
+        const users = await use.find({});
+
+        // Map users to exclude sensitive data like password before sending
+        const usersResponse = users.map(user => ({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            createdAt: user.createdAt
+        }));
+
+        // Respond with the fetched users as JSON
+        if (usersResponse.length > 0) {
+            res.status(200).json({
+                message: "Users fetched successfully",
+                count: usersResponse.length,
+                users: usersResponse
+            });
+        } else {
+            res.status(200).json({
+                message: "No users found in the database.",
+                count: 0,
+                users: []
+            });
+        }
+
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        // Handle specific Mongoose or MongoDB errors if needed
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
+module.exports = { userRegistration, getAllUsers };

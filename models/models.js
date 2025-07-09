@@ -3,13 +3,13 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
+      
         trim: true
     },
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique:false,
         trim: true,
         lowercase: true
     },
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 4,
-        select: false, // Exclude password from queries by default
+        select: true, // Exclude password from queries by default
         hidden: true // Hide password field in JSON responses
     },
    
